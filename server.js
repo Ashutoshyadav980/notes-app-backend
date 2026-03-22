@@ -11,7 +11,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// In-memory storage (simple - no database!)
+// In-memory storage
 let notes = [
   {
     id: 1,
@@ -22,6 +22,15 @@ let notes = [
 ];
 
 let noteId = 2;
+
+// ROOT ROUTE
+app.get('/', (req, res) => {
+  res.json({
+    message: '📝 Notes Management API',
+    version: '1.0.0',
+    status: '✅ running',
+  });
+});
 
 // GET all notes
 app.get('/api/notes', (req, res) => {
@@ -76,6 +85,13 @@ app.delete('/api/notes/:id', (req, res) => {
   res.json({ message: 'Note deleted' });
 });
 
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Server error' });
+});
+
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
